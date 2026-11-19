@@ -4,8 +4,9 @@
 [ext_resource type="Script" uid="uid://bw2cnkbcfomv6" path="res://slingshot.gd" id="2_0xm2m"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ig7tw"]
+friction = 0.1
 rough = true
-bounce = 0.3
+bounce = 0.1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l4i7v"]
 radius = 75.0
@@ -19,6 +20,7 @@ size = Vector2(2000, 100)
 position = Vector2(300, 800)
 scale = Vector2(0.25, 0.25)
 collision_layer = 3
+mass = 1.3
 physics_material_override = SubResource("PhysicsMaterial_ig7tw")
 angular_velocity = 0.17453292
 
