@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://wtrgsqay26rt"]
+
+[ext_resource type="Texture2D" uid="uid://bx5nqjn5gjbkc" path="res://ball.png" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bw2cnkbcfomv6" path="res://slingshot.gd" id="2_0xm2m"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ig7tw"]
+rough = true
+bounce = 0.3
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l4i7v"]
+radius = 75.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l4i7v"]
+size = Vector2(2000, 100)
+
+[node name="Main" type="Node2D" unique_id=1606107781]
+
+[node name="Ball" type="RigidBody2D" parent="." unique_id=583856574]
+position = Vector2(300, 800)
+scale = Vector2(0.25, 0.25)
+collision_layer = 3
+physics_material_override = SubResource("PhysicsMaterial_ig7tw")
+angular_velocity = 0.17453292
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=1440603599]
+shape = SubResource("CircleShape2D_l4i7v")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=1867284276]
+scale = Vector2(0.266, 0.266)
+texture = ExtResource("1_ig7tw")
+offset = Vector2(7.8, -7)
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=60462874]
+position = Vector2(960, 900)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=1332845790]
+shape = SubResource("RectangleShape2D_l4i7v")
+
+[node name="Slingshot" type="Node" parent="." unique_id=1942129658]
+script = ExtResource("2_0xm2m")
