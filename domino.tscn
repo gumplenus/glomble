@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://cj58bsaihbxgb"]
+
+[ext_resource type="Texture2D" uid="uid://d14kxpiok56d7" path="res://domino.png" id="1_o246h"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
+friction = 0.8
+rough = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ihmks"]
+size = Vector2(117, 331)
+
+[node name="Domino" type="RigidBody2D" unique_id=1046919951]
+mass = 1.2
+physics_material_override = SubResource("PhysicsMaterial_1bvp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099275722]
+shape = SubResource("RectangleShape2D_ihmks")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1987161727]
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_o246h")
