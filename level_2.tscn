@@ -1,0 +1,158 @@
+[gd_scene format=3 uid="uid://cb5up3ui1wymv"]
+
+[ext_resource type="Texture2D" uid="uid://c07t6431wqvtk" path="res://background.jpg" id="1_ehv2h"]
+[ext_resource type="Texture2D" uid="uid://bx5nqjn5gjbkc" path="res://ball.png" id="2_15wb7"]
+[ext_resource type="Texture2D" uid="uid://bsjpgwlm41uec" path="res://ground.png" id="3_eoq84"]
+[ext_resource type="Script" uid="uid://bw2cnkbcfomv6" path="res://slingshot.gd" id="4_yl73a"]
+[ext_resource type="PackedScene" uid="uid://cj58bsaihbxgb" path="res://domino.tscn" id="5_xbcdb"]
+[ext_resource type="AudioStream" uid="uid://c4qvni0hvtgue" path="res://sounds/hit_wood.wav" id="6_s77qv"]
+[ext_resource type="AudioStream" uid="uid://diyafepj7xfpl" path="res://sounds/fall_grass.mp3" id="7_5hnhx"]
+[ext_resource type="Texture2D" uid="uid://mv1by4aclaue" path="res://power_bar_frame.png" id="8_78pok"]
+[ext_resource type="Texture2D" uid="uid://c7gcx0o3vvnx0" path="res://hand.png" id="9_lvfll"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ig7tw"]
+friction = 0.1
+rough = true
+bounce = 0.1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l4i7v"]
+radius = 75.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ihmks"]
+radius = 80.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l4i7v"]
+size = Vector2(2000, 259)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4jhdb"]
+size = Vector2(125, 330)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ihmks"]
+size = Vector2(125, 330)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6nt1m"]
+size = Vector2(125, 330)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_780q3"]
+size = Vector2(100, 100)
+
+[node name="Level2" type="Node2D" unique_id=1606107781]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1795165695]
+position = Vector2(960, 540)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_ehv2h")
+
+[node name="Ball" type="RigidBody2D" parent="." unique_id=583856574]
+position = Vector2(300, 800)
+scale = Vector2(0.25, 0.25)
+mass = 1.5
+physics_material_override = SubResource("PhysicsMaterial_ig7tw")
+angular_velocity = 0.17453292
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=1440603599]
+shape = SubResource("CircleShape2D_l4i7v")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=1867284276]
+scale = Vector2(0.266, 0.266)
+texture = ExtResource("2_15wb7")
+offset = Vector2(7.8, -7)
+
+[node name="HitArea" type="Area2D" parent="Ball" unique_id=1087308184]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball/HitArea" unique_id=1415691685]
+shape = SubResource("CircleShape2D_ihmks")
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=60462874]
+position = Vector2(960, 900)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=1332845790]
+position = Vector2(0, 79.5)
+shape = SubResource("RectangleShape2D_l4i7v")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground" unique_id=1007274944]
+position = Vector2(-18.500046, 128.50002)
+scale = Vector2(1.6852678, 0.66536456)
+texture = ExtResource("3_eoq84")
+
+[node name="Slingshot" type="Node" parent="." unique_id=1942129658]
+script = ExtResource("4_yl73a")
+
+[node name="Domino" parent="." unique_id=1046919951 instance=ExtResource("5_xbcdb")]
+position = Vector2(800, 825)
+
+[node name="HitArea1" type="Area2D" parent="Domino" unique_id=1800623124]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Domino/HitArea1" unique_id=1251211834]
+shape = SubResource("RectangleShape2D_4jhdb")
+
+[node name="Domino2" parent="." unique_id=552478396 instance=ExtResource("5_xbcdb")]
+position = Vector2(1100, 825)
+mass = 0.4
+
+[node name="HitArea2" type="Area2D" parent="Domino2" unique_id=1240391724]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Domino2/HitArea2" unique_id=289637681]
+shape = SubResource("RectangleShape2D_ihmks")
+
+[node name="Domino3" parent="." unique_id=58329955 instance=ExtResource("5_xbcdb")]
+position = Vector2(1550, 825)
+mass = 0.2
+
+[node name="FallArea" type="Area2D" parent="Domino3" unique_id=630636168]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Domino3/FallArea" unique_id=1406219511]
+shape = SubResource("RectangleShape2D_6nt1m")
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="." unique_id=2095257152]
+stream = ExtResource("6_s77qv")
+
+[node name="FallSound" type="AudioStreamPlayer2D" parent="." unique_id=2052626723]
+stream = ExtResource("7_5hnhx")
+
+[node name="FallZone" type="Area2D" parent="." unique_id=517356171]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FallZone" unique_id=1785274837]
+position = Vector2(1700, 710)
+shape = SubResource("RectangleShape2D_780q3")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=325214094]
+
+[node name="PowerBarUI" type="Control" parent="CanvasLayer" unique_id=678565028]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = -130.0
+offset_right = 300.0
+offset_bottom = -90.0
+grow_vertical = 0
+
+[node name="Fill" type="ColorRect" parent="CanvasLayer/PowerBarUI" unique_id=1330702496]
+layout_mode = 0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 190.0
+offset_bottom = 50.0
+scale = Vector2(1.1, 1.1)
+color = Color(0, 1, 0, 1)
+
+[node name="BG" type="Sprite2D" parent="CanvasLayer/PowerBarUI" unique_id=1516601961]
+position = Vector2(100, 25)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("8_78pok")
+
+[node name="HandHint" type="Sprite2D" parent="." unique_id=1765910856]
+visible = false
+position = Vector2(1450, 500)
+rotation = 1.0471976
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("9_lvfll")
+
+[connection signal="body_entered" from="Ball" to="Slingshot" method="_on_ball_body_entered"]
+[connection signal="body_entered" from="Ball/HitArea" to="Slingshot" method="_on_hit_area_body_entered"]
+[connection signal="body_entered" from="Domino/HitArea1" to="Slingshot" method="_on_hit_area_1_body_entered"]
+[connection signal="body_entered" from="Domino2/HitArea2" to="Slingshot" method="_on_hit_area_2_body_entered"]
+[connection signal="body_entered" from="Domino3/FallArea" to="Slingshot" method="_on_fall_area_body_entered"]
+[connection signal="body_entered" from="FallZone" to="Slingshot" method="_on_fall_zone_body_entered"]
