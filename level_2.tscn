@@ -9,6 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://diyafepj7xfpl" path="res://sounds/fall_grass.mp3" id="7_5hnhx"]
 [ext_resource type="Texture2D" uid="uid://mv1by4aclaue" path="res://power_bar_frame.png" id="8_78pok"]
 [ext_resource type="Texture2D" uid="uid://c7gcx0o3vvnx0" path="res://hand.png" id="9_lvfll"]
+[ext_resource type="PackedScene" uid="uid://duvnvhh8tho2f" path="res://level_hud.tscn" id="10_15wb7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ig7tw"]
 friction = 0.1
@@ -149,6 +150,8 @@ position = Vector2(1450, 500)
 rotation = 1.0471976
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("9_lvfll")
+
+[node name="LevelHUD" parent="." unique_id=414677066 instance=ExtResource("10_15wb7")]
 
 [connection signal="body_entered" from="Ball" to="Slingshot" method="_on_ball_body_entered"]
 [connection signal="body_entered" from="Ball/HitArea" to="Slingshot" method="_on_hit_area_body_entered"]

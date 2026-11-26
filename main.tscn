@@ -9,6 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://diyafepj7xfpl" path="res://sounds/fall_grass.mp3" id="7_272bh"]
 [ext_resource type="Texture2D" uid="uid://c7gcx0o3vvnx0" path="res://hand.png" id="8_5vw27"]
 [ext_resource type="Texture2D" uid="uid://mv1by4aclaue" path="res://power_bar_frame.png" id="8_kek77"]
+[ext_resource type="PackedScene" uid="uid://duvnvhh8tho2f" path="res://level_hud.tscn" id="10_4c57u"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ig7tw"]
 friction = 0.1
@@ -111,6 +112,7 @@ stream = ExtResource("6_7mycd")
 stream = ExtResource("7_272bh")
 
 [node name="FallZone" type="Area2D" parent="." unique_id=517356171]
+position = Vector2(0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FallZone" unique_id=1785274837]
 position = Vector2(1700, 700)
@@ -148,6 +150,8 @@ position = Vector2(210, 650)
 rotation = 1.0471976
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("8_5vw27")
+
+[node name="LevelHUD" parent="." unique_id=414677066 instance=ExtResource("10_4c57u")]
 
 [connection signal="body_entered" from="Ball" to="Slingshot" method="_on_ball_body_entered"]
 [connection signal="body_entered" from="Ball/HitArea" to="Slingshot" method="_on_hit_area_body_entered"]

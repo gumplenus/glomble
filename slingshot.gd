@@ -10,6 +10,7 @@ var hint_start_pos = Vector2.ZERO
 var is_level_2 = false
 var has_launched = false 
 var check_timer = 0.0
+var launch_elapsed = 0.0
 var start_pos = Vector2.ZERO
 var last_result_success = false
 
@@ -110,6 +111,7 @@ func _input(event):
 					
 					has_launched = true 
 					check_timer = 0.0
+					launch_elapsed = 0.0
 
 	if event is InputEventScreenDrag or event is InputEventMouseMotion:
 		if is_dragging:
@@ -165,34 +167,33 @@ func _process(delta):
 
 func _physics_process(delta):
 	if has_launched and not is_dragging and result_screen_instance == null:
-		if ball.linear_velocity.length() > 10.0:
-			check_timer = 0.0
+		launch_elapsed += delta
+		# Даём шару минимум 0.8 сек долететь до первой доминошки
+		if launch_elapsed < 0.8:
 			return
 			
-		check_timer += delta
-		if check_timer > 2.0:
-			check_timer = 0
-			check_result()
-
-func check_result():
-	var dominoes = get_parent().get_children()
-	var all_fallen = true
-	var any_moving = false
-	
-	for child in dominoes:
-		if child.name.begins_with("Domino"):
-			if abs(child.rotation_degrees) < 45:
-				all_fallen = false
-			if child.linear_velocity.length() > 10 or abs(child.angular_velocity) > 0.5:
-				any_moving = true
-	
-	if any_moving:
-		return
+		var all_fallen = true
+		var dominoes_moving = false
+		for child in get_parent().get_children():
+			if child.name.begins_with("Domino"):
+				if abs(child.rotation_degrees) < 45:
+					all_fallen = false
+				if child.linear_velocity.length() > 15 or abs(child.angular_velocity) > 0.6:
+					dominoes_moving = true
 		
-	if all_fallen:
-		show_result(true)
-	else:
-		show_result(false)
+		# Если все доминошки уже остановились — сразу запускаем таймер (не ждём, пока шар докатится)
+		if not dominoes_moving:
+			# Если шар ещё быстро летит прямо к стоящим доминошкам — не прерываем удар
+			if not all_fallen and ball.linear_velocity.length() > 120.0:
+				check_timer = 0.0
+				return
+				
+			check_timer += delta
+			if check_timer > 0.45:
+				check_timer = 0.0
+				show_result(all_fallen)
+		else:
+			check_timer = 0.0
 
 func show_result(is_success):
 	if result_screen_instance != null:
