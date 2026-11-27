@@ -54,6 +54,16 @@ func _ready():
 	# Кнопки окна Delete Account
 	confirm_delete_btn.pressed.connect(_on_confirm_delete_pressed)
 	cancel_delete_btn.pressed.connect(_on_cancel_delete_pressed)
+	
+func _input(event):
+	if (event is InputEventScreenTouch or event is InputEventMouseButton) and event.pressed:
+		var focus_owner = get_viewport().gui_get_focus_owner()
+		if focus_owner and (focus_owner == name_input or focus_owner == message_input):
+			# Проверяем, попал ли тап за пределы активного поля ввода
+			if not focus_owner.get_global_rect().has_point(event.position):
+				focus_owner.release_focus()
+				DisplayServer.virtual_keyboard_hide()
+	
 
 func _animate_press(btn: Control) -> Tween:
 	btn.pivot_offset = btn.size / 2.0

@@ -23,19 +23,27 @@ corner_radius_bottom_left = 32
 script = ExtResource("1_lhhiu")
 
 [node name="HomeButton" type="TextureButton" parent="." unique_id=14928795]
-offset_left = 1650.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
 offset_top = 60.0
-offset_right = 1810.0
+offset_right = -60.0
 offset_bottom = 220.0
+grow_horizontal = 0
 texture_normal = ExtResource("1_7fgvd")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="SoundButton" type="TextureButton" parent="." unique_id=1510222198]
-offset_left = 1460.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -410.0
 offset_top = 60.0
-offset_right = 1620.0
+offset_right = -250.0
 offset_bottom = 220.0
+grow_horizontal = 0
 texture_normal = ExtResource("2_frri5")
 ignore_texture_size = true
 stretch_mode = 5
@@ -59,11 +67,18 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.627451)
 
 [node name="Box" type="Panel" parent="ExitDialog" unique_id=235585112]
-layout_mode = 0
-offset_left = 660.0
-offset_top = 350.0
-offset_right = 1260.0
-offset_bottom = 730.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -190.0
+offset_right = 300.0
+offset_bottom = 190.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_l4i7v")
 
 [node name="YesButton" type="TextureButton" parent="ExitDialog/Box" unique_id=523772661]

@@ -20,6 +20,8 @@ var last_result_success = false
 var stretch_player = AudioStreamPlayer.new()
 var sound_length = 0.0
 var launch_player = AudioStreamPlayer.new()
+var ambient_player = AudioStreamPlayer.new()
+var result_player = AudioStreamPlayer.new()
 
 @onready var hit_player = get_parent().get_node("HitSound")
 @onready var fall_player = get_parent().get_node("FallSound")
@@ -33,7 +35,6 @@ var result_screen_instance = null
 func _ready():
 	start_pos = ball.global_position
 	
-	# Определяем 2-й уровень по имени корневого узла сцены
 	if get_parent().name == "Level2":
 		is_level_2 = true
 	
@@ -45,6 +46,21 @@ func _ready():
 		
 	add_child(launch_player)
 	launch_player.stream = load("res://sounds/launch.wav")
+	
+	# Фоновый шум ветра, травы и птиц (тихий, -16 dB, только в уровне)
+	add_child(ambient_player)
+	var amb_stream = load("res://sounds/ambient_nature.wav")
+	if amb_stream:
+		if amb_stream is AudioStreamWAV:
+			amb_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			amb_stream.loop_begin = 0
+			amb_stream.loop_end = int(amb_stream.get_length() * amb_stream.mix_rate)
+		ambient_player.stream = amb_stream
+		ambient_player.volume_db = -6.0
+		ambient_player.play()
+		
+	add_child(result_player)
+	result_player.volume_db = -2.0
 	
 	power_bar.visible = false
 	
@@ -65,11 +81,11 @@ func _ready():
 func _input(event):
 	if event is InputEventScreenTouch or event is InputEventMouseButton:
 		if event.pressed:
-			var mouse_pos = get_viewport().get_mouse_position()
+			var mouse_pos = ball.get_global_mouse_position()
 			
 			# 1. ПРОВЕРКА ПЕРЕТАСКИВАНИЯ DOMINO3
 			if is_level_2 and domino3 and not has_launched:
-				if abs(mouse_pos.x - domino3.global_position.x) < 60 and abs(mouse_pos.y - domino3.global_position.y) < 120:
+				if abs(mouse_pos.x - domino3.global_position.x) < 70 and abs(mouse_pos.y - domino3.global_position.y) < 130:
 					is_dragging_domino = true
 					domino3.freeze = true
 					if hand_hint:
@@ -78,7 +94,7 @@ func _input(event):
 					return
 			
 			# 2. ПРОВЕРКА НАЖАТИЯ НА ШАР
-			if mouse_pos.distance_to(ball.global_position) < 150 and not has_launched:
+			if mouse_pos.distance_to(ball.global_position) < 160 and not has_launched:
 				is_dragging = true
 				ball.gravity_scale = 0 
 				stretch_player.play()
@@ -115,7 +131,7 @@ func _input(event):
 
 	if event is InputEventScreenDrag or event is InputEventMouseMotion:
 		if is_dragging:
-			var mouse_pos = get_viewport().get_mouse_position()
+			var mouse_pos = ball.get_global_mouse_position()
 			var new_x = clamp(mouse_pos.x, start_pos.x - max_pull_distance, start_pos.x)
 			
 			var pull_ratio = (start_pos.x - new_x) / max_pull_distance
@@ -130,7 +146,6 @@ func _input(event):
 			power_fill.color = Color(1.0, 1.0 - pull_ratio, 0.0)
 
 func _process(delta):
-	# Анимация подсказки
 	if hint_active and hand_hint:
 		hint_time += delta
 		var cycle_speed = 1.2 if is_level_2 else 1.0
@@ -148,14 +163,12 @@ func _process(delta):
 			hand_hint.visible = false
 			hand_hint.position = hint_start_pos
 
-	# Движение доминошки за пальцем
 	if is_dragging_domino and domino3:
-		var mouse_pos = get_viewport().get_mouse_position()
+		var mouse_pos = ball.get_global_mouse_position()
 		domino3.global_position.x = mouse_pos.x
 
-	# Плавное движение шара за пальцем
 	if is_dragging:
-		var mouse_pos = get_viewport().get_mouse_position()
+		var mouse_pos = ball.get_global_mouse_position()
 		var new_x = clamp(mouse_pos.x, start_pos.x - max_pull_distance, start_pos.x)
 		
 		var current_x = ball.global_position.x
@@ -168,7 +181,6 @@ func _process(delta):
 func _physics_process(delta):
 	if has_launched and not is_dragging and result_screen_instance == null:
 		launch_elapsed += delta
-		# Даём шару минимум 0.8 сек долететь до первой доминошки
 		if launch_elapsed < 0.8:
 			return
 			
@@ -181,9 +193,7 @@ func _physics_process(delta):
 				if child.linear_velocity.length() > 15 or abs(child.angular_velocity) > 0.6:
 					dominoes_moving = true
 		
-		# Если все доминошки уже остановились — сразу запускаем таймер (не ждём, пока шар докатится)
 		if not dominoes_moving:
-			# Если шар ещё быстро летит прямо к стоящим доминошкам — не прерываем удар
 			if not all_fallen and ball.linear_velocity.length() > 120.0:
 				check_timer = 0.0
 				return
@@ -200,6 +210,12 @@ func show_result(is_success):
 		return
 		
 	last_result_success = is_success
+	
+	# Проигрываем звук победы или поражения
+	var res_stream = load("res://sounds/win.wav") if is_success else load("res://sounds/lose.wav")
+	if res_stream:
+		result_player.stream = res_stream
+		result_player.play()
 		
 	if is_level_2:
 		Engine.set_meta("level_2_failed", not is_success)
@@ -219,7 +235,6 @@ func _on_result_ok_pressed():
 	else:
 		get_tree().call_deferred("reload_current_scene")
 
-# --- ЗВУКИ СТОЛКНОВЕНИЙ ---
 func _on_hit_area_body_entered(body):
 	if body.name.begins_with("Domino"):
 		if not hit_player.playing:

@@ -41,7 +41,7 @@ size = Vector2(100, 100)
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1795165695]
 position = Vector2(960, 540)
-scale = Vector2(1.5, 1.5)
+scale = Vector2(2.3, 1.5)
 texture = ExtResource("1_ehv2h")
 
 [node name="Ball" type="RigidBody2D" parent="." unique_id=583856574]
@@ -72,8 +72,8 @@ position = Vector2(0, 79.5)
 shape = SubResource("RectangleShape2D_l4i7v")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ground" unique_id=1007274944]
-position = Vector2(-18.500046, 128.50002)
-scale = Vector2(1.6852678, 0.66536456)
+position = Vector2(0, 128.5)
+scale = Vector2(2.4, 0.665)
 texture = ExtResource("3_eoq84")
 
 [node name="Slingshot" type="Node" parent="." unique_id=1942129658]
@@ -152,6 +152,9 @@ scale = Vector2(0.3, 0.3)
 texture = ExtResource("9_lvfll")
 
 [node name="LevelHUD" parent="." unique_id=414677066 instance=ExtResource("10_15wb7")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1203800088]
+position = Vector2(960, 540)
 
 [connection signal="body_entered" from="Ball" to="Slingshot" method="_on_ball_body_entered"]
 [connection signal="body_entered" from="Ball/HitArea" to="Slingshot" method="_on_hit_area_body_entered"]
